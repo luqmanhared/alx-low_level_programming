@@ -1,1 +1,1 @@
-0x00 Hello world Readme file
+# 0x02-functions_nested_loops
