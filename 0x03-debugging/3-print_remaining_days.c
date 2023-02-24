@@ -2,9 +2,9 @@
 #include "main.h"
 
 /**
- * print_remaining_days - calculate remaining days
- * @month: month 
- * @day: day
+ * print_remaining_days - how many days are left
+ * @month: month
+ * @day: year
  * @year: year
  * Return: always zero
  */
