@@ -3,7 +3,7 @@
 
 /**
  * print_listint - Prints ever element of a listint_t linked list.
- * @head: A pointer pointing to the head of the list.
+ * @head: A pointer pointing towards the head of the list.
  *
  * Return: Number of nodes inside the linked list.
  */
