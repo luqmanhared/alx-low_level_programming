@@ -1,44 +1,38 @@
-#include <stdio.h>
-#include <string.h>
 #include "main.h"
 
 /**
- * insert_text_to_file_tail - Adds text to the end of a file.
- * @file_name: A pointer to the name of the target file.
- * @text_to_append: The string to be appended at the end of the file.
+ * append_text_to_file - Appends text at the end of a file.
+ * @filename: A pointer to the name of the file.
+ * @text_content: The string to add to the end of the file.
  *
- * Return: If the function encounters a failure or file_name is NULL - -1.
- *         If the file is non-existent or the user lacks write permissions - -1.
+ * Return: If the function fails or filename is NULL - -1.
+ *         If the file does not exist the user lacks write permissions - -1.
  *         Otherwise - 1.
  */
-
-int add_text_to_file_end(const char *file_name, char *text_to_append)
+int append_text_to_file(const char *filename, char *text_content)
 {
-	FILE *file_handle;
-	size_t text_length = 0;
+	int o, w, len = 0;
 
-	if (file_name == NULL)
+	if (filename == NULL)
 		return (-1);
 
-	if (text_to_append != NULL)
+	if (text_content != NULL)
 	{
-		text_length = strlen(text_to_append);
+		while (text_content[len])
+			len++;
 	}
 
-	file_handle = fopen(file_name, "a");
-	if (file_handle == NULL)
+	o = open(filename, O_WRONLY | O_APPEND);
+	if (o == -1)
 		return (-1);
 
-	if (text_to_append != NULL)
+	w = write(o, text_content, len);
+	if (w == -1)
 	{
-		if (fwrite(text_to_append, sizeof(char), text_length, file_handle) != text_length)
-		{
-			fclose(file_handle);
-			return (-1);
-		}
+		close(o);
+		return (-1);
 	}
 
-	fclose(file_handle);
-
+	close(o);
 	return (1);
 }
