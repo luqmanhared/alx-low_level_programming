@@ -1,3 +1,6 @@
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include "main.h"
 
 /**
@@ -17,15 +20,23 @@ int create_new_file(const char *file_name, char *file_content)
 
 	if (file_content != NULL)
 	{
-		for (content_length = 0; file_content[content_length];)
-			content_length++;
+		for (content_length = 0; file_content[content_length]; content_length++)
+			;
 	}
 
-	file_descriptor = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0600);
-	write_status = write(file_descriptor, file_content, content_length);
-
-	if (file_descriptor == -1 || write_status == -1)
+	file_descriptor = open(file_name, O_CREAT | O_RDWR | O_TRUNC);
+	if (file_descriptor == -1)
 		return (-1);
+
+	if (file_content != NULL)
+	{
+		write_status = write(file_descriptor, file_content, content_length);
+		if (write_status == -1)
+		{
+			close(file_descriptor);
+			return (-1);
+		}
+	}
 
 	close(file_descriptor);
 
