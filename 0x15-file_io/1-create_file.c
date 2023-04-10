@@ -1,42 +1,33 @@
 #include "main.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 /**
- * create_file - Creates new file with given name and writes given content.
- * @filename: A pointer to a string containing the name of the file to create.
- * @content: A pointer to a string containing the content to write to the file.
+ * create_new_file - Generates a new file.
+ * @file_name: A pointer to the name of the file to create.
+ * @file_content: A pointer to a string to write to the file.
  *
- * Return: If the function fails -1.
+ * Return: If the function fails - -1.
  *         Otherwise - 1.
  */
-int create_file(const char *filename, char *content)
+int create_new_file(const char *file_name, char *file_content)
 {
-	int file_descriptor, bytes_written, content_length = 0;
+	int file_descriptor, write_status, content_length = 0;
 
-	if (filename == NULL)
+	if (file_name == NULL)
 		return (-1);
 
-	if (content != NULL)
+	if (file_content != NULL)
 	{
-		content_length = strlen(content);
+		for (content_length = 0; file_content[content_length];)
+			content_length++;
 	}
 
-	file_descriptor = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	file_descriptor = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0600);
+	write_status = write(file_descriptor, file_content, content_length);
 
-	if (file_descriptor == -1)
+	if (file_descriptor == -1 || write_status == -1)
 		return (-1);
-
-	bytes_written = write(file_descriptor, content, content_length);
-
-	if (bytes_written == -1)
-	{
-		close(file_descriptor);
-		return (-1);
-	}
 
 	close(file_descriptor);
+
 	return (1);
 }
