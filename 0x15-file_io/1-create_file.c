@@ -1,44 +1,42 @@
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "main.h"
 
 /**
- * create_new_file - Generates a new file.
- * @file_name: A pointer to the name of the file to create.
- * @file_content: A pointer to a string to write to the file.
+ * create_file_alt - Creates a file.
+ * @filename: A pointer to the name of the file to create.
+ * @text_content: A pointer to a string to write to the file.
  *
  * Return: If the function fails - -1.
  *         Otherwise - 1.
  */
-int create_new_file(const char *file_name, char *file_content)
+int create_file_alt(const char *filename, char *text_content)
 {
-	int file_descriptor, write_status, content_length = 0;
+	FILE *file_ptr;
+	size_t len = 0;
 
-	if (file_name == NULL)
+	if (filename == NULL)
 		return (-1);
 
-	if (file_content != NULL)
+	if (text_content != NULL)
 	{
-		for (content_length = 0; file_content[content_length]; content_length++)
-			;
+		len = strlen(text_content);
 	}
 
-	file_descriptor = open(file_name, O_CREAT | O_RDWR | O_TRUNC);
-	if (file_descriptor == -1)
+	file_ptr = fopen(filename, "w");
+	if (file_ptr == NULL)
 		return (-1);
 
-	if (file_content != NULL)
+	if (text_content != NULL)
 	{
-		write_status = write(file_descriptor, file_content, content_length);
-		if (write_status == -1)
+		if (fwrite(text_content, sizeof(char), len, file_ptr) != len)
 		{
-			close(file_descriptor);
+			fclose(file_ptr);
 			return (-1);
 		}
 	}
 
-	close(file_descriptor);
+	fclose(file_ptr);
 
 	return (1);
 }
