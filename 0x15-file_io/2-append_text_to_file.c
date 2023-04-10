@@ -1,43 +1,44 @@
-#include "main.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include "main.h"
 
 /**
- * create_file - Creates a new file with the given name and writes the given content to it.
- * @filename: A pointer to a string containing the name of the file to create.
- * @content: A pointer to a string containing the content to write to the file.
+ * insert_text_to_file_tail - Adds text to the end of a file.
+ * @file_name: A pointer to the name of the target file.
+ * @text_to_append: The string to be appended at the end of the file.
  *
- * Return: If the function fails - -1.
+ * Return: If the function encounters a failure or file_name is NULL - -1.
+ *         If the file is non-existent or the user lacks write permissions - -1.
  *         Otherwise - 1.
  */
-int create_file(const char *filename, char *content)
+
+int add_text_to_file_end(const char *file_name, char *text_to_append)
 {
-    int file_descriptor, bytes_written, content_length = 0;
+	FILE *file_handle;
+	size_t text_length = 0;
 
-    if (filename == NULL)
-        return (-1);
+	if (file_name == NULL)
+		return (-1);
 
-    if (content != NULL)
-    {
-        content_length = strlen(content);
-    }
+	if (text_to_append != NULL)
+	{
+		text_length = strlen(text_to_append);
+	}
 
-    file_descriptor = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	file_handle = fopen(file_name, "a");
+	if (file_handle == NULL)
+		return (-1);
 
-    if (file_descriptor == -1)
-        return (-1);
+	if (text_to_append != NULL)
+	{
+		if (fwrite(text_to_append, sizeof(char), text_length, file_handle) != text_length)
+		{
+			fclose(file_handle);
+			return (-1);
+		}
+	}
 
-    bytes_written = write(file_descriptor, content, content_length);
+	fclose(file_handle);
 
-    if (bytes_written == -1)
-    {
-        close(file_descriptor);
-        return (-1);
-    }
-
-    close(file_descriptor);
-    return (1);
+	return (1);
 }
