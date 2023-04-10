@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 /**
- * read_textfile - Reads a text file and writes its content to the standard output.
+ * read_textfile - Reads text file and writes content to the standard output.
  * @filename: Name of the text file to read.
  * @num_letters: Maximum number of letters to read and print.
  *
