@@ -1,15 +1,15 @@
 #include "main.h"
 
 /**
- * create_file - Generates a new file and writes content to it
- * @filename: A pointer to the string representing name of the file to create
- * @text_content: A pointer to the string that will be written to the new file
+ * create_file - Creates a file
+ * @filename: A pointer to the name of the file to create
+ * @text_content: A pointer to a string to write to the file
  *
- * Return: Returns -1 if an error occurs, 1 if the it executes successfully
+ * Return: -1 if the function fails, 1 if successful
  */
 int create_file(const char *filename, char *text_content)
 {
-	int file_descriptor, write_status, length = 0;
+	int file, write_res, length = 0;
 
 	if (filename == NULL)
 		return (-1);
@@ -20,16 +20,13 @@ int create_file(const char *filename, char *text_content)
 			length++;
 	}
 
-	file_descriptor = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0600);
-	write_status = write(file_descriptor, text_content, length);
+	file = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0600);
+	write_res = write(file, text_content, length);
 
-	if (file_descriptor == -1 || write_status == -1)
-	{
-		close(file_descriptor);
+	if (file == -1 || write_res == -1)
 		return (-1);
-	}
 
-	close(file_descriptor);
+	close(file);
 
 	return (1);
 }
