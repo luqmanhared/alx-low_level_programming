@@ -1,40 +1,37 @@
 #include "main.h"
 
 /**
- * create_file - Creates a file with specified permissions and writes the
- *               provided content to the file. If the file exists, it is
- *               truncated.
- * @filename: A pointer to the name of the file to create
- * @text_content: A pointer to a NULL-terminated string to write to the file
+ * create_file - Creates a file and writes content to it.
+ * @filename: The name of the file to create
+ * @text_content: The NULL-terminated string to write to the file
  *
- * Return: 1 on success, -1 on failure (file cannot be created, file cannot
- *         be written, write fails, etc.)
+ * Return: 1 on success, -1 on failure
  */
 int create_file(const char *filename, char *text_content)
 {
-	int file_descriptor, write_status, length = 0;
+	int fd, written, len = 0;
 
 	if (filename == NULL)
 		return (-1);
 
-	file_descriptor = open(filename, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
-	if (file_descriptor == -1)
+	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+	if (fd == -1)
 		return (-1);
 
 	if (text_content != NULL)
 	{
-		while (text_content[length])
-			length++;
+		while (text_content[len])
+			len++;
 
-		write_status = write(file_descriptor, text_content, length);
+		written = write(fd, text_content, len);
 
-		if (write_status == -1)
+		if (written == -1)
 		{
-			close(file_descriptor);
+			close(fd);
 			return (-1);
 		}
 	}
 
-	close(file_descriptor);
+	close(fd);
 	return (1);
 }
